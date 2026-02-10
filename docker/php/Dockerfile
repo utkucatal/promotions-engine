@@ -16,7 +16,7 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash \
 ENV SYMFONY_HOME=/tmp/.symfony
 ENV HOME=/tmp
 
-WORKDIR /var/www/symfony
+WORKDIR /var/www
 
 USER www-data
 
