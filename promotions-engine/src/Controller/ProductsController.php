@@ -53,21 +53,11 @@ class ProductsController extends AbstractController
             date_create_immutable($lowestPriceEnquiry->getRequestDate())
         );
 
-        return new JsonResponse([
-            'debug_promotions' => array_map(fn($p) => [
-                'id' => $p->getId(),
-                'name' => $p->getName(),
-                'type' => $p->getType(),
-                'adjustment' => $p->getAdjustment(),
-                'criteria' => $p->getCriteria(),
-            ], $promotions)
-        ]);
-
-        $modifiedEnquiry = $promotionsFilter->apply($lowestPriceEnquiry, $promotions);
+        $modifiedEnquiry = $promotionsFilter->apply($lowestPriceEnquiry, ...$promotions);
 
         $responseContent = $serializer->serialize($modifiedEnquiry, 'json');
 
-        return new Response($responseContent, Response::HTTP_OK);
+        return new Response($responseContent, Response::HTTP_OK, ['content-type' => 'application/json']);
     }
 
     #[Route(path: '/products/{id}/promotions', name: 'promotions', methods: 'GET')]
