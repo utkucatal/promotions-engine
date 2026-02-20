@@ -28,8 +28,6 @@ class LowestPriceEnquiry implements PromotionEnquiryInterface
         $this->product = $product;
     }
 
-
-
     public function getQuantity(): ?int
     {
         return $this->quantity;
