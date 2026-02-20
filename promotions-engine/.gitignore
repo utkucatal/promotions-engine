@@ -12,6 +12,7 @@
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
+.phpunit.cache
 ###< phpunit/phpunit ###
 
 # Created by https://www.toptal.com/developers/gitignore/api/symfony,phpstorm
