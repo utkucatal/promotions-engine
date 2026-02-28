@@ -8,15 +8,15 @@ use Symfony\Component\Serializer\Attribute\Ignore;
 class LowestPriceEnquiry implements PromotionEnquiryInterface
 {
     #[Ignore]
-    private ?Product $product;
-    private ?int $quantity;
-    private ?string $requestLocation;
-    private ?string $voucherCode ;
-    private ?string $requestDate;
-    private ?int $price;
-    private ?int $discountedPrice;
-    private ?int $promotionId;
-    private ?string $promotionName;
+    private ?Product $product = null;
+    private ?int $quantity = null;
+    private ?string $requestLocation = null;
+    private ?string $voucherCode = null;
+    private ?string $requestDate = null;
+    private ?int $price = null;
+    private ?int $discountedPrice = null;
+    private ?int $promotionId = null;
+    private ?string $promotionName = null;
 
     public function getProduct(): ?Product
     {
