@@ -5,7 +5,7 @@ namespace App\Tests\unit;
 use App\DTO\LowestPriceEnquiry;
 use App\Entity\Promotion;
 use App\Filter\Modifier\DateRangeMultiplier;
-use App\Filter\Modifier\fixedPriceVoucher;
+use App\Filter\Modifier\FixedPriceVoucher;
 use App\Tests\ServiceTestCase;
 use PHPUnit\Framework\Attributes\Test;
 use function Symfony\Component\String\s;
@@ -41,7 +41,7 @@ class PriceModifiersTest extends ServiceTestCase
     public function FixedPriceVoucherReturnsACorrectlyModifiedPrice():void
     {
         //Given
-        $fixedPriceVoucher = new fixedPriceVoucher();
+        $fixedPriceVoucher = new FixedPriceVoucher();
 
         $promotion = new Promotion();
         $promotion->setName('Voucher OU812');
