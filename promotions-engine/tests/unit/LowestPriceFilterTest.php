@@ -7,10 +7,12 @@ use App\Entity\Product;
 use App\Entity\Promotion;
 use App\Filter\LowestPriceFilter;
 use App\Tests\ServiceTestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class LowestPriceFilterTest extends ServiceTestCase
 {
-    public function test_lowest_price_promotions_filtering_is_applied_correctly(): void
+    #[Test]
+    public function lowestPricePromotionsFilteringIsAppliedCorrectly(): void
     {
         //Given
         $product = new Product();
@@ -19,6 +21,8 @@ class LowestPriceFilterTest extends ServiceTestCase
         $enquiry = new LowestPriceEnquiry();
         $enquiry->setProduct($product);
         $enquiry->setQuantity(5);
+        $enquiry->setRequestDate('2026-02-12');
+        $enquiry->setVoucherCode('OU812');
 
         $promotions = $this->promotionsDataProvider();
         $lowestPriceFilter = $this->container->get(LowestPriceFilter::class);
@@ -27,7 +31,7 @@ class LowestPriceFilterTest extends ServiceTestCase
         $filteredEnquiry = $lowestPriceFilter->apply($enquiry, ...$promotions);
         //Then
         $this->assertSame(100, $filteredEnquiry->getPrice());
-        $this->assertSame(50, $filteredEnquiry->getDiscountedPrice());
+        $this->assertSame(250, $filteredEnquiry->getDiscountedPrice());
         $this->assertSame("Black Friday half price sale", $filteredEnquiry->getPromotionName());
     }
 
