@@ -43,6 +43,14 @@ services:
     networks:
       - symfony_network
 
+  # Redis Cache
+  redis:
+    image: redis:8.4
+    ports:
+      - "6379"
+    networks:
+      - symfony_network
+
 networks:
   symfony_network:
     driver: bridge
