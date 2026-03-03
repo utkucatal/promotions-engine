@@ -3,7 +3,6 @@
 namespace App\Cache;
 
 use App\Entity\Product;
-use App\Entity\Promotion;
 use App\Repository\PromotionRepository;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
