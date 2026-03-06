@@ -4,18 +4,31 @@ namespace App\DTO;
 
 use App\Entity\Product;
 use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class LowestPriceEnquiry implements PriceEnquiryInterface
 {
     #[Ignore]
     private ?Product $product = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Positive]
     private ?int $quantity = null;
+
     private ?string $requestLocation = null;
+
     private ?string $voucherCode = null;
+
+    #[Assert\NotBlank]
     private ?string $requestDate = null;
+
+    #[Assert\Positive]
     private ?int $price = null;
+
     private ?int $discountedPrice = null;
+
     private ?int $promotionId = null;
+
     private ?string $promotionName = null;
 
     public function getProduct(): ?Product
