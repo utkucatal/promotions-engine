@@ -49,7 +49,7 @@ class ProductsController extends AbstractController
             $request->getContent(), LowestPriceEnquiry::class, 'json'
         );
 
-        $product = $this->repository->find($id);
+        $product = $this->repository->findOrFail($id);
 
         if (!$product) {
             return new JsonResponse(['error' => 'Product not found'], Response::HTTP_NOT_FOUND);

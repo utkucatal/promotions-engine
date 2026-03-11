@@ -2,13 +2,11 @@
 
 namespace App\EventSubscriber;
 
-use App\Event\AfterDtoCreatedEvent;
 use App\Service\ServiceException;
-use App\Service\ServiceExceptionData;
+use App\Event\AfterDtoCreatedEvent;
 use App\Service\ValidationExceptionData;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DtoSubscriber implements EventSubscriberInterface
 {
@@ -19,9 +17,7 @@ class DtoSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            AfterDtoCreatedEvent::NAME => [
-                ['validateDto', 100]
-            ]
+            AfterDtoCreatedEvent::NAME => 'validateDto'
         ];
     }
 
