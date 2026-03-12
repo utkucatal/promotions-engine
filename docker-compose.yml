@@ -43,6 +43,21 @@ services:
     networks:
       - symfony_network
 
+  # PostgreSQL Test Service
+  postgres_test:
+    image: postgres:16-alpine
+    container_name: symfony_postgres_test
+    environment:
+      POSTGRES_DB: ${POSTGRES_TEST_DB:-promotions_test}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    networks:
+      - symfony_network
+
   # Redis Cache
   redis:
     image: redis:8.4
@@ -57,3 +72,4 @@ networks:
 
 volumes:
   postgres_data:
+  postgres_test_data:
