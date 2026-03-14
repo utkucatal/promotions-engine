@@ -93,3 +93,7 @@ Unit and integration tests are included. Integration tests run against the real 
 ```bash
 docker exec symfony_php php bin/phpunit
 ```
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
