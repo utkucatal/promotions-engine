@@ -1,5 +1,12 @@
 # Promotions Engine
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PHP](https://img.shields.io/badge/PHP-8-777BB4?logo=php&logoColor=white)](https://www.php.net)
+[![Symfony](https://img.shields.io/badge/Symfony-7-000000?logo=symfony&logoColor=white)](https://symfony.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Redis](https://img.shields.io/badge/Redis-8-DC382D?logo=redis&logoColor=white)](https://redis.io)
+[![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
+
 A RESTful API built with Symfony 7 that determines the lowest applicable price for a product by evaluating a set of active promotions. Each promotion type applies a different pricing strategy — the engine picks the one that results in the lowest total price for the customer.
 
 Built as a portfolio project to demonstrate backend API design, design patterns, caching, and testing practices in PHP.
