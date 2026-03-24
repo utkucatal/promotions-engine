@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          path: promotions-engine
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -68,5 +70,5 @@ jobs:
         working-directory: ./promotions-engine
 
       - name: Run tests
-        run: ./vendor/bin/phpunit
+        run: php bin/phpunit
         working-directory: ./promotions-engine
