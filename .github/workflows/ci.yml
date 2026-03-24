@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: promotions_test
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:8.4
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, redis, mbstring, zip
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v5
+        with:
+          path: promotions-engine/vendor
+          key: composer-${{ hashFiles('promotions-engine/composer.lock') }}
+
+      - name: Create test .env
+        run: |
+          cp .env.example .env
+          cp .env.example .env.test.local
+        working-directory: ./promotions-engine
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+        working-directory: ./promotions-engine
+
+      - name: Setup test database
+        run: |
+          php bin/console doctrine:database:create --env=test --if-not-exists
+          php bin/console doctrine:migrations:migrate --env=test --no-interaction
+        working-directory: ./promotions-engine
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit
+        working-directory: ./promotions-engine
