@@ -6,7 +6,7 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Redis](https://img.shields.io/badge/Redis-8-DC382D?logo=redis&logoColor=white)](https://redis.io)
 [![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
-![CI](https://github.com/kullanici-adi/promotions-engine/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/utkucatal/promotions-engine/actions/workflows/ci.yml/badge.svg)
 
 A RESTful API built with Symfony 7 that determines the lowest applicable price for a product by evaluating a set of active promotions. Each promotion type applies a different pricing strategy — the engine picks the one that results in the lowest total price for the customer.
 
