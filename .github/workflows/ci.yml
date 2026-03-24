@@ -55,8 +55,9 @@ jobs:
         run: |
           cp .env.example .env
           cp .env.example .env.test.local
+          echo "DATABASE_URL=postgresql://app:secret@127.0.0.1:5432/promotions_test" >> .env.test.local
+          echo "REDIS_URL=redis://127.0.0.1:6379" >> .env.test.local
         working-directory: ./promotions-engine
-
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
         working-directory: ./promotions-engine
