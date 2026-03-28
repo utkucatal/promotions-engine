@@ -2,12 +2,12 @@
 
 namespace App\EventListener;
 
+use App\Service\ServiceException;
 use App\Service\ServiceExceptionData;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 class ExceptionListener
 {
@@ -19,7 +19,7 @@ class ExceptionListener
     {
         $exception = $event->getThrowable();
 
-        if ($exception instanceof HttpExceptionInterface) {
+        if ($exception instanceof ServiceException) {
 
             $exceptionData = $exception->getExceptionData();
             $this->logger->warning('HTTP exception occurred', [
