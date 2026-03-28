@@ -9,7 +9,6 @@ use App\Filter\Modifier\EvenItemsMultiplier;
 use App\Filter\Modifier\FixedPriceVoucher;
 use App\Tests\ServiceTestCase;
 use PHPUnit\Framework\Attributes\Test;
-use function Symfony\Component\String\s;
 
 class PriceModifiersTest extends ServiceTestCase
 {
