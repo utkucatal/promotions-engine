@@ -25,6 +25,7 @@ class ProductsControllerTest extends ServiceTestCase
     private function createProduct(): Product
     {
         $product = new Product();
+        $product->setName('Test Product');
         $product->setPrice(1000);
         $this->em->persist($product);
         $this->em->flush();
