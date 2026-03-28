@@ -121,4 +121,34 @@ class ProductsControllerTest extends ServiceTestCase
         $response = $this->client->getResponse();
         $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
     }
+
+    public function testPromotionsReturns200ForValidProduct(): void
+    {
+        $product = $this->createProduct();
+        $this->client->request(
+            'GET',
+            '/products/'.$product->getId().'/promotions',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json']
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public function testPromotionsReturns404ForNonExistentProduct(): void
+    {
+        $this->client->request(
+            'GET',
+            '/products/9999999/promotions',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json']
+        );
+
+        $response = $this->client->getResponse();
+        $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
 }
