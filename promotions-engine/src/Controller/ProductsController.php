@@ -11,19 +11,17 @@ use App\Filter\PromotionsFilterInterface;
 use App\Repository\ProductRepository;
 use App\Repository\PromotionRepository;
 use App\Service\Serializer\DTOSerializer;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
 use Psr\Log\LoggerInterface;
+use OpenApi\Attributes as OA;
+use Nelmio\ApiDocBundle\Attribute\Model;
 
-
+#[OA\Tag(name: 'Products')]
 class ProductsController extends AbstractController
 {
     public function __construct(
@@ -38,6 +36,45 @@ class ProductsController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route('/products/{id}/lowest-price', name: 'lowest-price', methods: 'POST')]
+    #[OA\Post(
+        path: '/products/{id}/lowest-price',
+        description: 'Applies all valid promotions and returns the lowest achievable price',
+        summary: 'Calculate the lowest price for a product',
+    )]
+    #[OA\Parameter(
+        name: 'id',
+        description: 'Product ID',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer')
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'quantity', type: 'integer', example: 5),
+                new OA\Property(property: 'request_date', type: 'string', format: 'date', example: '2026-02-12'),
+                new OA\Property(property: 'voucher_code', type: 'string', example: 'OU812'),
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'Lowest price calculated successfully',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'quantity', type: 'integer', example: 5),
+                new OA\Property(property: 'voucher_code', type: 'string', example: 'OU812', nullable: true),
+                new OA\Property(property: 'request_date', type: 'string', format: 'date', example: '2026-02-12'),
+                new OA\Property(property: 'price', type: 'integer', example: 200),
+                new OA\Property(property: 'discounted_price', type: 'integer', example: 100),
+                new OA\Property(property: 'promotion_id', type: 'integer', example: 1),
+                new OA\Property(property: 'promotion_name', type: 'string', example: 'Black Friday half price sale'),
+            ]
+        )
+    )]
+    #[OA\Response(response: 404, description: 'Product not found')]
+    #[OA\Response(response: 422, description: 'Validation error')]
     public function lowestPrice(
         Request $request,
         int $id,
@@ -82,6 +119,26 @@ class ProductsController extends AbstractController
     }
 
     #[Route(path: '/products/{id}/promotions', name: 'promotions', methods: 'GET')]
+    #[OA\Get(
+        path: '/products/{id}/promotions',
+        summary: 'Get all valid promotions for a product',
+    )]
+    #[OA\Parameter(
+        name: 'id',
+        description: 'Product ID',
+        in: 'path',
+        required: true,
+        schema: new OA\Schema(type: 'integer')
+    )]
+    #[OA\Response(
+        response: 200,
+        description: 'List of valid promotions',
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items(ref: new Model(type: PromotionResponse::class))
+        )
+    )]
+    #[OA\Response(response: 404, description: 'Product not found')]
     public function promotions(int $id): JsonResponse
     {
         $product = $this->repository->findOrFail($id);

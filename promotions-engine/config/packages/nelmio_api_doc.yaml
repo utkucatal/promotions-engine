@@ -1,0 +1,10 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Promotions Engine API
+            description: Product promotions calculation service
+            version: 1.0.0
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/products
+ #           - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
