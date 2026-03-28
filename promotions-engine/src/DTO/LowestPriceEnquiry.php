@@ -15,8 +15,6 @@ class LowestPriceEnquiry implements PriceEnquiryInterface
     #[Assert\Positive]
     private ?int $quantity = null;
 
-    private ?string $requestLocation = null;
-
     private ?string $voucherCode = null;
 
     #[Assert\NotBlank]
@@ -49,16 +47,6 @@ class LowestPriceEnquiry implements PriceEnquiryInterface
     public function setQuantity(?int $quantity): void
     {
         $this->quantity = $quantity;
-    }
-
-    public function getRequestLocation(): ?string
-    {
-        return $this->requestLocation;
-    }
-
-    public function setRequestLocation(?string $requestLocation): void
-    {
-        $this->requestLocation = $requestLocation;
     }
 
     public function getVoucherCode(): ?string
