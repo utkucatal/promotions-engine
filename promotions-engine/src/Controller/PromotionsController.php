@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Attribute\RateLimit;
 use App\DTO\CreatePromotionRequest;
 use App\DTO\PromotionResponse;
 use App\DTO\UpdatePromotionRequest;
@@ -27,6 +28,7 @@ class PromotionsController extends AbstractController
     ) {}
 
     #[Route('', name: 'promotions_list', methods: 'GET')]
+    #[RateLimit(limit: 120, intervalSeconds: 60)]
     #[OA\Get(path: '/promotions', summary: 'List all promotions')]
     #[OA\Response(
         response: 200,
@@ -48,6 +50,7 @@ class PromotionsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'promotions_show', methods: 'GET')]
+    #[RateLimit(limit: 120, intervalSeconds: 60)]
     #[OA\Get(path: '/promotions/{id}', summary: 'Get a promotion by ID')]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))]
     #[OA\Response(
@@ -68,6 +71,7 @@ class PromotionsController extends AbstractController
     }
 
     #[Route('', name: 'promotions_create', methods: 'POST')]
+    #[RateLimit(limit: 30, intervalSeconds: 60)]
     #[OA\Post(path: '/promotions', summary: 'Create a new promotion')]
     #[OA\RequestBody(
         required: true,
@@ -92,6 +96,7 @@ class PromotionsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'promotions_update', methods: 'PUT')]
+    #[RateLimit(limit: 30, intervalSeconds: 60)]
     #[OA\Put(path: '/promotions/{id}', summary: 'Update a promotion')]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))]
     #[OA\RequestBody(
@@ -121,6 +126,7 @@ class PromotionsController extends AbstractController
     }
 
     #[Route('/{id}', name: 'promotions_delete', methods: 'DELETE')]
+    #[RateLimit(limit: 10, intervalSeconds: 60)]
     #[OA\Delete(path: '/promotions/{id}', summary: 'Delete a promotion')]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))]
     #[OA\Response(response: 204, description: 'Promotion deleted')]

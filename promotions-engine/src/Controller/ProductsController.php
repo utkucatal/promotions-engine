@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Attribute\RateLimit;
 use App\Cache\PromotionCache;
 use App\DTO\LowestPriceEnquiry;
 use App\DTO\PromotionResponse;
@@ -75,6 +76,7 @@ class ProductsController extends AbstractController
     )]
     #[OA\Response(response: 404, description: 'Product not found')]
     #[OA\Response(response: 422, description: 'Validation error')]
+    #[RateLimit(limit: 60, intervalSeconds: 60)]
     public function lowestPrice(
         Request $request,
         int $id,
@@ -135,6 +137,7 @@ class ProductsController extends AbstractController
         )
     )]
     #[OA\Response(response: 404, description: 'Product not found')]
+    #[RateLimit(limit: 120, intervalSeconds: 60)]
     public function promotions(int $id): JsonResponse
     {
         $product = $this->repository->findOrFail($id);
