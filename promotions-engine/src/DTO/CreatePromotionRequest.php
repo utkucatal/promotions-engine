@@ -2,6 +2,7 @@
 
 namespace App\DTO;
 
+use App\Enum\PromotionType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreatePromotionRequest
@@ -11,7 +12,7 @@ class CreatePromotionRequest
     public ?string $name = null;
 
     #[Assert\NotBlank]
-    #[ValidPromotionType]
+    #[Assert\Choice(callback: [PromotionType::class, 'values'])]
     public ?string $type = null;
 
     #[Assert\NotBlank]
