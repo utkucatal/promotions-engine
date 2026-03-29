@@ -13,7 +13,7 @@ class AfterDtoCreatedEvent extends Event
     {
     }
 
-    public function getDto():PromotionEnquiryInterface
+    public function getDto(): PromotionEnquiryInterface
     {
         return $this->dto;
     }
