@@ -24,3 +24,13 @@ services:
     App\EventListener\ExceptionListener:
         tags:
             - {name: kernel.event_listener, event: kernel.exception}
+
+    Symfony\Component\RateLimiter\Storage\CacheStorage:
+        arguments:
+            - '@cache.app'
+
+    Symfony\Component\RateLimiter\Storage\StorageInterface: '@Symfony\Component\RateLimiter\Storage\CacheStorage'
+
+    App\EventListener\RateLimitListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
