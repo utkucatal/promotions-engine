@@ -38,7 +38,7 @@ class ExceptionListener
             ]);
         }
 
-        $response = new JsonResponse($exceptionData->toArray());
+        $response = new JsonResponse($exceptionData->toArray(), $exceptionData->getStatusCode());
         $event->setResponse($response);
     }
 }
