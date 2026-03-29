@@ -11,8 +11,9 @@ use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
-class ApiKeyAuthenticator extends AbstractAuthenticator
+class ApiKeyAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface
 {
     public function __construct(private readonly string $validApiKey) {}
 
@@ -40,5 +41,10 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
         return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+    }
+
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
+    {
+        return new JsonResponse(['error' => 'Access key required'], Response::HTTP_UNAUTHORIZED);
     }
 }

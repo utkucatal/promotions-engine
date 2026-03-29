@@ -13,6 +13,7 @@ security:
             pattern: ^/
             stateless: true
             custom_authenticator: App\Security\ApiKeyAuthenticator
+            entry_point: App\Security\ApiKeyAuthenticator
 
     access_control:
         - { path: ^/promotions, roles: IS_AUTHENTICATED_FULLY, methods: [POST, PUT, DELETE] }
