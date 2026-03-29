@@ -7,7 +7,7 @@ use App\Cache\PromotionCache;
 use App\DTO\LowestPriceEnquiry;
 use App\DTO\PromotionResponse;
 use App\Entity\Promotion;
-use App\Filter\PromotionsFilterInterface;
+use App\Filter\PriceFilterInterface;
 use App\Repository\ProductRepository;
 use App\Repository\PromotionRepository;
 use App\Service\Serializer\DTOSerializer;
@@ -79,7 +79,7 @@ class ProductsController extends AbstractController
         Request $request,
         int $id,
         DTOSerializer $serializer,
-        PromotionsFilterInterface $promotionsFilter,
+        PriceFilterInterface $promotionsFilter,
         PromotionCache $promotionCache
     ): Response
     {
@@ -118,7 +118,7 @@ class ProductsController extends AbstractController
         return new Response($responseContent, Response::HTTP_OK, ['content-type' => 'application/json']);
     }
 
-    #[Route(path: '/products/{id}/promotions', name: 'promotions', methods: 'GET')]
+    #[Route(path: '/products/{id}/promotions', name: 'products_promotions', methods: 'GET')]
     #[OA\Get(
         path: '/products/{id}/promotions',
         summary: 'Get all valid promotions for a product',
