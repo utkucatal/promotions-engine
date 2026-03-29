@@ -21,7 +21,7 @@ class Product
     #[Assert\Length(max: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 100, unique: true, nullable: true)]
+    #[ORM\Column(length: 100, nullable: true)]
     private ?string $sku = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
