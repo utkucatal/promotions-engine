@@ -46,7 +46,7 @@ class ProductsControllerTest extends ServiceTestCase
             '/products/' . $product->getId() . '/lowest-price',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json'],
+            $this->withApiKey(['CONTENT_TYPE' => 'application/json']),
             json_encode([
                 'quantity' => 5,
                 'request_date' => '2026-02-12',
@@ -72,7 +72,7 @@ class ProductsControllerTest extends ServiceTestCase
             '/products/9999999/lowest-price',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json'],
+            $this->withApiKey(['CONTENT_TYPE' => 'application/json']),
             json_encode([
                 'quantity' => 5,
                 'request_date' => '2026-02-12',
@@ -92,7 +92,7 @@ class ProductsControllerTest extends ServiceTestCase
             '/products/'.$product->getId().'/lowest-price',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json'],
+            $this->withApiKey(['CONTENT_TYPE' => 'application/json']),
             json_encode([
                 'quantity' => -5,
                 'request_date' => '2026-02-12',
@@ -112,7 +112,7 @@ class ProductsControllerTest extends ServiceTestCase
             '/products/'.$product->getId().'/lowest-price',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json'],
+            $this->withApiKey(['CONTENT_TYPE' => 'application/json']),
             json_encode([
                 'quantity' => 5,
                 'voucher_code' => 'OU812'

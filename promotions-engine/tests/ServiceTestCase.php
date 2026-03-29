@@ -18,4 +18,9 @@ class ServiceTestCase extends WebTestCase
         $this->client = static::createClient();
         $this->container = $this->client->getContainer();
     }
+
+    protected function withApiKey(array $server = []): array
+    {
+        return array_merge(['HTTP_Access_Token' => $_ENV['API_KEY']], $server);
+    }
 }

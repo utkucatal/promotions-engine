@@ -88,7 +88,7 @@ class PromotionsControllerTest extends ServiceTestCase
 
     public function testCreateReturns201WithValidBody(): void
     {
-        $this->client->request('POST', '/promotions', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('POST', '/promotions', [], [], $this->withApiKey(['CONTENT_TYPE' => 'application/json']), json_encode([
             'name'       => 'New Promotion',
             'type'       => 'date_range_multiplier',
             'adjustment' => 0.7,
@@ -106,7 +106,7 @@ class PromotionsControllerTest extends ServiceTestCase
 
     public function testCreateReturns422WithMissingFields(): void
     {
-        $this->client->request('POST', '/promotions', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('POST', '/promotions', [], [], $this->withApiKey(['CONTENT_TYPE' => 'application/json']), json_encode([
             'name' => 'Incomplete Promotion',
         ]));
 
@@ -119,7 +119,7 @@ class PromotionsControllerTest extends ServiceTestCase
     {
         $promotion = $this->createPromotion();
 
-        $this->client->request('PUT', '/promotions/' . $promotion->getId(), [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('PUT', '/promotions/' . $promotion->getId(), [], [], $this->withApiKey(['CONTENT_TYPE' => 'application/json']), json_encode([
             'name' => 'Updated Promotion',
         ]));
 
@@ -136,7 +136,7 @@ class PromotionsControllerTest extends ServiceTestCase
         $promotion = $this->createPromotion();
         $originalType = $promotion->getType();
 
-        $this->client->request('PUT', '/promotions/' . $promotion->getId(), [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('PUT', '/promotions/' . $promotion->getId(), [], [], $this->withApiKey(['CONTENT_TYPE' => 'application/json']), json_encode([
             'name' => 'Partially Updated',
         ]));
 
@@ -149,7 +149,7 @@ class PromotionsControllerTest extends ServiceTestCase
 
     public function testUpdateReturns404ForNonExistentPromotion(): void
     {
-        $this->client->request('PUT', '/promotions/9999999', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('PUT', '/promotions/9999999', [], [], $this->withApiKey(['CONTENT_TYPE' => 'application/json']), json_encode([
             'name' => 'Ghost',
         ]));
 
@@ -162,14 +162,14 @@ class PromotionsControllerTest extends ServiceTestCase
     {
         $promotion = $this->createPromotion();
 
-        $this->client->request('DELETE', '/promotions/' . $promotion->getId());
+        $this->client->request('DELETE', '/promotions/' . $promotion->getId(), [], [], $this->withApiKey());
 
         $this->assertSame(Response::HTTP_NO_CONTENT, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDeleteReturns404ForNonExistentPromotion(): void
     {
-        $this->client->request('DELETE', '/promotions/9999999');
+        $this->client->request('DELETE', '/promotions/9999999', [], [], $this->withApiKey());
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
