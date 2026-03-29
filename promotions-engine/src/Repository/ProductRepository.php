@@ -21,10 +21,8 @@ class ProductRepository extends ServiceEntityRepository
     public function findOrFail(int $id): Product
     {
         $product = $this->find($id);
-        if (!$product){
-            $exceptionData = new ServiceExceptionData(404, 'Product Not Found');
-
-            throw new ServiceException($exceptionData);
+        if (!$product) {
+            throw new ServiceException(new ServiceExceptionData(404, 'Product Not Found'));
         }
 
         return $product;
@@ -37,29 +35,4 @@ class ProductRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
-
-    //    /**
-    //     * @return Product[] Returns an array of Product objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Product
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

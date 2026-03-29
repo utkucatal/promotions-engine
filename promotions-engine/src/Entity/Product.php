@@ -100,26 +100,4 @@ class Product
     }
 
 
-//
-//    public function addProductPromotion(ProductPromotion $productPromotion): static
-//    {
-//        if (!$this->productPromotions->contains($productPromotion)) {
-//            $this->productPromotions->add($productPromotion);
-//            $productPromotion->setProduct($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeProductPromotion(ProductPromotion $productPromotion): static
-//    {
-//        if ($this->productPromotions->removeElement($productPromotion)) {
-//            // set the owning side to null (unless already changed)
-//            if ($productPromotion->getProduct() === $this) {
-//                $productPromotion->setProduct(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
 }
