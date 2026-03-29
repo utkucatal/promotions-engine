@@ -8,7 +8,7 @@ use App\Filter\Modifier\Factory\PriceModifierFactoryInterface;
 
 class LowestPriceFilter implements PriceFilterInterface
 {
-    public function __construct(private PriceModifierFactoryInterface $priceModifierFactory)
+    public function __construct(private readonly PriceModifierFactoryInterface $priceModifierFactory)
     {
 
     }

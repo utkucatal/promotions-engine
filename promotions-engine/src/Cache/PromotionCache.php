@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace App\Cache;
 
@@ -9,7 +9,7 @@ use Symfony\Contracts\Cache\ItemInterface;
 
 class PromotionCache
 {
-    public function __construct(private CacheInterface $cache, private PromotionRepository $repository)
+    public function __construct(private readonly CacheInterface $cache, private readonly PromotionRepository $repository)
     {}
 
     public function findValidForProduct(Product $product, string $requestDate) :?array

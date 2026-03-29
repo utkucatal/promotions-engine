@@ -21,8 +21,8 @@ class DTOSerializer implements SerializerInterface
     private SerializerInterface $serializer;
 
     public function __construct(
-        private ValidatorInterface $validator,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly ValidatorInterface $validator,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
         $this->serializer = new Serializer(
             [new ObjectNormalizer(

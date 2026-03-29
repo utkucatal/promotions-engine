@@ -25,9 +25,9 @@ use Nelmio\ApiDocBundle\Attribute\Model;
 class ProductsController extends AbstractController
 {
     public function __construct(
-        private ProductRepository $repository,
-        private PromotionRepository $promotionRepository,
-        private LoggerInterface $logger
+        private readonly ProductRepository   $repository,
+        private readonly PromotionRepository $promotionRepository,
+        private readonly LoggerInterface     $logger
     )
     {
     }
@@ -96,10 +96,6 @@ class ProductsController extends AbstractController
         );
 
         $product = $this->repository->findOrFail($id);
-
-        if (!$product) {
-            return new JsonResponse(['error' => 'Product not found'], Response::HTTP_NOT_FOUND);
-        }
 
         $lowestPriceEnquiry->setProduct($product);
 
