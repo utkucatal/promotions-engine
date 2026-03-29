@@ -34,3 +34,7 @@ services:
     App\EventListener\RateLimitListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+
+    App\Security\ApiKeyAuthenticator:
+        arguments:
+            $validApiKey: '%env(API_KEY)%'
