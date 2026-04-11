@@ -170,6 +170,13 @@ Unit and integration tests are included. Integration tests run against the real 
 docker exec symfony_php php bin/phpunit
 ```
 
+## Related projects
+
+Two Go services in separate repos are built to work with this engine:
+
+- [data-generator](https://github.com/utkucatal/data-generator) — Writes random product rows to a CSV file, with an option to gzip the output. Useful for loading a database with millions of rows.
+- [import-export-service](https://github.com/utkucatal/import-export-service) — It imports/exports CSV/JSON files into/from the engine’s Postgres database in batches. It connects to the engine’s Docker network, so you don’t need to expose any database ports on the host
+
 ## License
 
 This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
