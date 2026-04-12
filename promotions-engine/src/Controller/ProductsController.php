@@ -151,4 +151,21 @@ class ProductsController extends AbstractController
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
+
+    #[Route('/products/search', name: 'products_search', methods: 'GET')]
+    public function search(Request $request): JsonResponse
+    {
+        $q = $request->query->get('q', '');
+        if (strlen($q) < 2) {
+            return new JsonResponse(['error' => 'Query must be at least 2 characters'], 400);
+        }
+
+        $results = $this->repository->createQueryBuilder('p')
+            ->where('LOWER(p.name) LIKE LOWER(:q) OR LOWER(p.description) LIKE LOWER(:q) OR LOWER(p.sku) LIKE LOWER(:q)')
+            ->setParameter('q', '%' . $q . '%')
+            ->getQuery()
+            ->getArrayResult();
+
+        return new JsonResponse($results);
+    }
 }
