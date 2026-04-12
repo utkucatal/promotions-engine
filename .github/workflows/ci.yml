@@ -82,5 +82,5 @@ jobs:
         working-directory: ./promotions-engine
 
       - name: Run tests
-        run: php bin/phpunit
+        run: ./vendor/bin/phpunit
         working-directory: ./promotions-engine
