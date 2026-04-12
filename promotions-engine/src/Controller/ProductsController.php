@@ -9,6 +9,7 @@ use App\DTO\LowestPriceEnquiry;
 use App\DTO\PromotionResponse;
 use App\Entity\Promotion;
 use App\Filter\PriceFilterInterface;
+use App\Message\PriceCalculatedEvent;
 use App\Repository\ProductRepository;
 use App\Repository\PromotionRepository;
 use App\Service\Serializer\DTOSerializer;
@@ -16,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Psr\Log\LoggerInterface;
@@ -28,7 +30,8 @@ class ProductsController extends AbstractController
     public function __construct(
         private readonly ProductRepository   $repository,
         private readonly PromotionRepository $promotionRepository,
-        private readonly LoggerInterface     $logger
+        private readonly LoggerInterface     $logger,
+        private readonly MessageBusInterface $bus,
     )
     {
     }
@@ -112,6 +115,18 @@ class ProductsController extends AbstractController
             'discounted_price' => $modifiedEnquiry->getDiscountedPrice(),
             'promotion_name'  => $modifiedEnquiry->getPromotionName(),
         ]);
+
+        $this->bus->dispatch(new PriceCalculatedEvent(
+            productId: $product->getId(),
+            productName: $product->getName(),
+            originalPrice: $product->getPrice() * $lowestPriceEnquiry->getQuantity(),
+            discountedPrice: $modifiedEnquiry->getDiscountedPrice(),
+            promotionId: $modifiedEnquiry->getPromotionId(),
+            promotionName: $modifiedEnquiry->getPromotionName(),
+            quantity: $modifiedEnquiry->getQuantity(),
+            requestDate: $modifiedEnquiry->getRequestDate(),
+            calculatedAt: (new \DateTimeImmutable())->format('c'),
+        ));
 
         return new Response($responseContent, Response::HTTP_OK, ['content-type' => 'application/json']);
     }
