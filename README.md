@@ -20,6 +20,7 @@ Built as a portfolio project to demonstrate backend API design, design patterns,
 |---|---|
 | Framework | Symfony 7 / PHP 8 |
 | Database | PostgreSQL 16 |
+| Search | Elasticsearch 8 |
 | Cache / Rate Limiting | Redis |
 | Infrastructure | Docker, Nginx, PHP-FPM |
 | API Docs | OpenAPI 3.0 (NelmioApiDocBundle + Swagger UI) |
@@ -36,8 +37,11 @@ After deserializing the request body into a DTO, an `AfterDtoCreatedEvent` is di
 ### Rate Limiting
 Rate limiting is enforced at the `kernel.request` level via a `RateLimitListener`. Each controller action is annotated with a `#[RateLimit(limit: N, intervalSeconds: M)]` PHP attribute — the listener reads this via reflection and applies a per-IP, per-endpoint sliding window limiter backed by Redis. Limits can be tuned per endpoint by changing the attribute value; no listener or config changes needed. Endpoints without the attribute are not rate limited. Exceeding the limit returns `429 Too Many Requests`.
 
+### Elasticsearch Full-Text Search
+Products and promotions are indexed in Elasticsearch for fast full-text search. The `ElasticsearchService` handles indexing, bulk operations (chunked for large datasets), and search queries with fuzzy matching. A console command (`app:elasticsearch:reindex`) streams records from PostgreSQL using Doctrine's `toIterable()` to keep memory usage constant regardless of dataset size.
+
 ### Redis Caching
-Valid promotions for a product are cached in Redis for 1 hour (`PromotionCache`), avoiding repeated database queries for high-traffic endpoints.
+Valid promotions for a product are cached in Redis for 1 hour (`PromotionCache`). Search results are also cached in Redis to avoid hitting Elasticsearch on repeated queries.
 
 ### Separate Test Database
 A dedicated PostgreSQL instance runs for tests (`postgres_test` service in Docker), keeping the test environment fully isolated from the development database.
@@ -133,6 +137,29 @@ Rate limit: **120 req / 60s** per IP.
   "criteria": { "start": "2024-11-29", "end": "2024-11-29" }
 }
 ```
+
+---
+
+### Search
+
+| Method | Path | Description | Rate limit |
+|--------|------|-------------|------------|
+| `GET` | `/search/products?q=laptop` | Full-text search on products | 120 req / 60s |
+| `GET` | `/search/promotions?q=summer&type=date_range_multiplier` | Full-text search on promotions (optional type filter) | 120 req / 60s |
+
+## Search Performance Benchmark
+
+Tested with **1,720,000 product records**. Load test: 1000 requests, 100 concurrent users.
+
+| | PostgreSQL LIKE | Elasticsearch | ES + Redis Cache |
+|---|---|---|---|
+| Avg response time | 27998ms | 567ms | **375ms** |
+| Requests/sec | 3.57 | 176 | **266** |
+| Total time (1000 req) | 280s | 5.7s | **3.7s** |
+
+> Tested with 1,720,000 product records. 1000 requests, 100 concurrent users (Apache Benchmark).
+>
+> PostgreSQL `LIKE` does a full table scan on every request. Elasticsearch searches on pre-indexed data with fuzzy matching. Redis caches search results so repeated queries skip Elasticsearch entirely.
 
 ---
 
