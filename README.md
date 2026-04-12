@@ -3,9 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8-777BB4?logo=php&logoColor=white)](https://www.php.net)
 [![Symfony](https://img.shields.io/badge/Symfony-7.4-000000?logo=symfony&logoColor=white)](https://symfony.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Redis](https://img.shields.io/badge/Redis-8-DC382D?logo=redis&logoColor=white)](https://redis.io)
-[![Elasticsearch](https://img.shields.io/badge/Elasticsearch-8-005571?logo=elasticsearch&logoColor=white)](https://www.elastic.co)
+[![Elasticsearch](https://img.shields.io/badge/Elasticsearch-9-005571?logo=elasticsearch&logoColor=white)](https://www.elastic.co)
+[![Kafka](https://img.shields.io/badge/Kafka-4.2-231F20?logo=apachekafka&logoColor=white)](https://kafka.apache.org)
 [![Docker](https://img.shields.io/badge/Docker-compose-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
 [![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0-85EA2D?logo=swagger&logoColor=white)](http://localhost:8080/api/doc)
 [![PHPUnit](https://img.shields.io/badge/PHPUnit-12-366488?logo=php&logoColor=white)](https://phpunit.de)
@@ -20,8 +21,9 @@ Built as a portfolio project to demonstrate backend API design, design patterns,
 | Layer | Technology |
 |---|---|
 | Framework | Symfony 7 / PHP 8 |
-| Database | PostgreSQL 16 |
-| Search | Elasticsearch 8 |
+| Database | PostgreSQL 18 |
+| Search | Elasticsearch 9 |
+| Messaging | Apache Kafka 4.2 |
 | Cache / Rate Limiting | Redis |
 | Infrastructure | Docker, Nginx, PHP-FPM |
 | API Docs | OpenAPI 3.0 (NelmioApiDocBundle + Swagger UI) |
@@ -186,6 +188,15 @@ Powered by [NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle). A
 cp .env.example .env
 docker-compose up -d
 docker exec symfony_php php bin/console doctrine:migrations:migrate
+docker exec -it symfony_kafka /opt/kafka/bin/kafka-topics.sh --create --topic promotions_events --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+docker exec -it symfony_php php bin/console app:elasticsearch:reindex
+docker exec -it symfony_php php bin/console cache:clear
+```
+
+Start Kafka consumer:
+
+```bash
+docker exec -it symfony_php php bin/console messenger:consume async -vv
 ```
 
 API available at `http://localhost:8080`.
