@@ -2,9 +2,11 @@ FROM php:8.3-fpm
 
 RUN apt-get update && apt-get install -y \
     git curl zip unzip \
-    libpng-dev libonig-dev libxml2-dev libzip-dev libpq-dev \
+    libpng-dev libonig-dev libxml2-dev libzip-dev libpq-dev librdkafka-dev \
     && docker-php-ext-install \
         pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip \
+    && pecl install rdkafka \
+    && docker-php-ext-enable rdkafka \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
