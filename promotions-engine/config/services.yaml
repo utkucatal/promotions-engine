@@ -38,3 +38,7 @@ services:
     App\Security\ApiKeyAuthenticator:
         arguments:
             $validApiKey: '%env(API_KEY)%'
+
+    App\Search\ElasticsearchService:
+        arguments:
+            $elasticsearchUrl: '%env(ELASTICSEARCH_URL)%'
