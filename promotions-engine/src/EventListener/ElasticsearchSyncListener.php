@@ -15,8 +15,11 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 #[AsEntityListener(event: Events::postPersist, entity: Product::class)]
 #[AsEntityListener(event: Events::postUpdate, entity: Product::class)]
 #[AsEntityListener(event: Events::postRemove, entity: Product::class)]
-readonly class ElasticsearchSyncListener
+#[AsEntityListener(event: Events::preRemove, entity: Product::class)]
+class ElasticsearchSyncListener
 {
+    private array $pendingDeletes = [];
+
     public function __construct(
         private ElasticsearchService   $es,
         private TagAwareCacheInterface $cache,
@@ -40,6 +43,11 @@ readonly class ElasticsearchSyncListener
         $this->cache->invalidateTags(['search-products']);
     }
 
+    public function preRemove(Product $entity): void
+    {
+        $this->pendingDeletes[spl_object_id($entity)] = $entity->getId();
+    }
+
     /**
      * @throws ClientResponseException
      * @throws ServerResponseException
@@ -47,8 +55,12 @@ readonly class ElasticsearchSyncListener
      */
     public function postRemove(Product $entity): void
     {
-        $this->es->delete('products', $entity->getId());
-        $this->cache->invalidateTags(['search-products']);
+        $id = $this->pendingDeletes[spl_object_id($entity)] ?? null;
+        unset($this->pendingDeletes[spl_object_id($entity)]);
+        if ($id !== null) {
+            $this->es->delete('products', $id);
+            $this->cache->invalidateTags(['search-products']);
+        }
     }
 
     private function indexEntity(Product $entity): void

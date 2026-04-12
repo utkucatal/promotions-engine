@@ -160,7 +160,7 @@ class PromotionsController extends AbstractController
         $this->entityManager->remove($promotion);
         $this->entityManager->flush();
 
-        $this->es->delete('promotion', $id);
+        $this->es->delete('promotions', $id);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
