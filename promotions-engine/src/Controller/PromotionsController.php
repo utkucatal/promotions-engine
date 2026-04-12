@@ -8,6 +8,7 @@ use App\DTO\PromotionResponse;
 use App\DTO\UpdatePromotionRequest;
 use App\Entity\Promotion;
 use App\Repository\PromotionRepository;
+use App\Search\ElasticsearchService;
 use App\Service\Serializer\DTOSerializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Nelmio\ApiDocBundle\Attribute\Model;
@@ -25,6 +26,7 @@ class PromotionsController extends AbstractController
     public function __construct(
         private readonly PromotionRepository    $repository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly ElasticsearchService $es,
     ) {}
 
     #[Route('', name: 'promotions_list', methods: 'GET')]
@@ -92,6 +94,14 @@ class PromotionsController extends AbstractController
         $this->entityManager->persist($promotion);
         $this->entityManager->flush();
 
+        $this->es->index('promotion', $promotion->getId(), [
+            'id' => $promotion->getId(),
+            'name' => $promotion->getName(),
+            'type' => $promotion->getType(),
+            'adjustment' => $promotion->getAdjustment(),
+            'criteria' => $promotion->getCriteria(),
+        ]);
+
         return new JsonResponse(['id' => $promotion->getId()], Response::HTTP_CREATED);
     }
 
@@ -122,6 +132,14 @@ class PromotionsController extends AbstractController
 
         $this->entityManager->flush();
 
+        $this->es->index('promotion', $promotion->getId(), [
+            'id' => $promotion->getId(),
+            'name' => $promotion->getName(),
+            'type' => $promotion->getType(),
+            'adjustment' => $promotion->getAdjustment(),
+            'criteria' => $promotion->getCriteria(),
+        ]);
+
         return new JsonResponse(['message' => 'Promotion updated'], Response::HTTP_OK);
     }
 
@@ -141,6 +159,8 @@ class PromotionsController extends AbstractController
 
         $this->entityManager->remove($promotion);
         $this->entityManager->flush();
+
+        $this->es->delete('promotion', $id);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
