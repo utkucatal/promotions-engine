@@ -152,7 +152,7 @@ Rate limit: **120 req / 60s** per IP.
 
 ## Search Performance Benchmark
 
-Tested with **1,720,000 product records**. Load test: 1000 requests, 100 concurrent users.
+Tested under **high data volume** stress conditions. Load test: 1000 requests, 100 concurrent users.
 
 | | PostgreSQL LIKE | Elasticsearch | ES + Redis Cache |
 |---|---|---|---|
@@ -160,8 +160,6 @@ Tested with **1,720,000 product records**. Load test: 1000 requests, 100 concurr
 | Requests/sec | 3.57 | 176 | **266** |
 | Total time (1000 req) | 280s | 5.7s | **3.7s** |
 
-> Tested with 1,720,000 product records. 1000 requests, 100 concurrent users (Apache Benchmark).
->
 > PostgreSQL `LIKE` does a full table scan on every request. Elasticsearch searches on pre-indexed data with fuzzy matching. Redis caches search results so repeated queries skip Elasticsearch entirely.
 
 ---
